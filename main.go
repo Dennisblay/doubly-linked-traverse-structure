@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"time"
+)
+
 func main() {
 
 	stn := Station{
@@ -14,6 +19,7 @@ func main() {
 		next:     nil,
 		prev:     nil,
 	}
+
 	stn2 := Station{
 		Coordinates: &Point{
 			X:                2500,
@@ -28,8 +34,23 @@ func main() {
 	}
 
 	t := Traverse{}
-	t.PushStationBack(stn)
-	t.PushStationBack(stn2)
+
+	done := make(chan interface{}, 100)
+	for i := 0; i < 100; i++ {
+		go func() {
+			t.PushStationBack(stn)
+			t.PushStationBack(stn2)
+			done <- "Goroutine is done!"
+
+		}()
+
+	}
+	message := <-done
+	fmt.Println(message)
+	start := time.Now()
 	t.traverse()
+	elapsed := time.Since(start)
+	fmt.Printf("%.10f has elapsed\n", elapsed.Seconds())
+	fmt.Println(t.size)
 
 }

@@ -18,6 +18,10 @@ type Station struct {
 	prev        *Station
 }
 
+func (s *Station) String() string {
+	return fmt.Sprintf("|HCRs: %v, |X: %v, |Y:  %v, |Distance: %v, |Unit: %v \n⬇\n", s.HCRs, s.Coordinates.X, s.Coordinates.Y, s.Distance, s.unit)
+}
+
 // Traverse defines the start and end of the traverse
 type Traverse struct {
 	head *Station
@@ -116,8 +120,8 @@ func (t *Traverse) traverse() {
 	current := t.head
 
 	for current != nil {
-		fmt.Printf("%#v\n", current)
-		fmt.Println("⬇")
+		//fmt.Printf("%#v\n", current)
+		fmt.Println(current)
 		current = current.next
 	}
 
@@ -137,9 +141,6 @@ func (t *Traverse) Back() *Station {
 		return nil
 	}
 	return t.head
-}
-
-type Stringer interface {
 }
 
 func (t *Traverse) ComputeBearing() {

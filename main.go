@@ -1,26 +1,44 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"time"
 )
 
-func main() {
+func main__() {
+
+	// Define flags
+	_filename := flag.String("filename", "data/traverse_data.csv", "file path")
+	filename := *_filename
+
+	// Parse command-line arguments
+	flag.Parse()
+
+	read := CsvReader{filename: filename}
+	data := read.ReadFile()
+	fmt.Println(data.Names())
+	fmt.Println(data.Select([]string{"Ins."}))
+	//dataParser := DataParser{data:data}
+	//dataParser.parse()
 
 	stn := Station{
+		stationName: "TP1",
 		Coordinates: &Point{
 			X:                2000,
 			Y:                4000,
 			Z:                288,
 			CoordinateSystem: "Ghana National Grid",
+			ellipsoid:        "War Office",
+			Datum:            "Accra",
+			epsgCode:         "EPSG:2500",
 		},
 		Distance: 1000,
-		unit:     "m",
+		unit:     "ft",
 		next:     nil,
 		prev:     nil,
 	}
-
 	stn2 := Station{
+		stationName: "TP6",
 		Coordinates: &Point{
 			X:                2500,
 			Y:                7000,
@@ -34,23 +52,7 @@ func main() {
 	}
 
 	t := Traverse{}
-
-	done := make(chan interface{}, 100)
-	for i := 0; i < 100; i++ {
-		go func() {
-			t.PushStationBack(stn)
-			t.PushStationBack(stn2)
-			done <- "Goroutine is done!"
-
-		}()
-
-	}
-	message := <-done
-	fmt.Println(message)
-	start := time.Now()
-	t.traverse()
-	elapsed := time.Since(start)
-	fmt.Printf("%.10f has elapsed\n", elapsed.Seconds())
-	fmt.Println(t.size)
+	t.PushStationBack(stn)
+	t.PushStationBack(stn2)
 
 }

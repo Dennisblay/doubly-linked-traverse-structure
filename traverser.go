@@ -4,18 +4,20 @@ import "fmt"
 
 // Point defines a 3D coordinate system
 type Point struct {
-	X, Y, Z          float64
-	CoordinateSystem string
+	X, Y, Z                                      float64
+	CoordinateSystem, ellipsoid, Datum, epsgCode string
 }
 
 // Station defines Traverse station attributes in a traverse
 type Station struct {
+	stationName string
 	HCRs        [4]float64
 	Coordinates *Point
-	Distance    float64
-	unit        string
-	next        *Station
-	prev        *Station
+
+	Distance float64
+	unit     string
+	next     *Station
+	prev     *Station
 }
 
 func (s *Station) String() string {

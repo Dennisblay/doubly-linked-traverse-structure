@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Point defines a 3D coordinate system
 type Point struct {
@@ -11,13 +13,12 @@ type Point struct {
 // Station defines Traverse station attributes in a traverse
 type Station struct {
 	stationName string
-	HCRs        [4]float64
+	HCRs        []float64
 	Coordinates *Point
-
-	Distance float64
-	unit     string
-	next     *Station
-	prev     *Station
+	Distance    float64
+	unit        string
+	next        *Station
+	prev        *Station
 }
 
 func (s *Station) String() string {
@@ -146,5 +147,28 @@ func (t *Traverse) Back() *Station {
 }
 
 func (t *Traverse) ComputeBearing() {
+
+}
+
+func (t *Traverse) HorizontalAngles() {
+	if t.IsEmpty() {
+		return
+	}
+	current := t.head.next
+	hcrs := current.HCRs
+	// Setting zeros (two sets of readings)
+	for current.next != nil {
+		if len(hcrs) == 0 {
+			return
+		}
+		if len(hcrs) == 8 {
+			fmt.Println((((hcrs[1] - hcrs[0]) + (hcrs[2] - hcrs[3])) / 2) + (((hcrs[5] - hcrs[4]) + (hcrs[6] - hcrs[7])) / 2))
+		}
+		// One set of readings
+		fmt.Println(((hcrs[1] - hcrs[0]) + (hcrs[2] - hcrs[3])) / 2)
+
+		current = current.next
+		hcrs = current.HCRs
+	}
 
 }
